@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
 
 namespace LINQ
 {
@@ -16,27 +17,98 @@ namespace LINQ
             RootObject root = JsonConvert.DeserializeObject<RootObject>(lines);
 
             // Question 1 - Output all neighborhoods from data
-            IEnumerable<string> locData = root.features.Select(data => data.properties.neighborhood);
-            Console.WriteLine(String.Join(", ", locData));
+            Console.WriteLine("This is all neighborhoods printed.");
+            Console.WriteLine("==================================");
+            Console.WriteLine();
+            Question1(root);
 
             // Spacing because data is large
-            Console.WriteLine();
-            Console.WriteLine("=================");
-            Console.WriteLine();
+            Console.ReadLine();
+            Console.Clear();
 
             // Question 2 - Filter out all neighborhoods without names
-            IEnumerable<string> filtered =
-                from data in root.features
-                where data.properties.neighborhood.Length > 0
-                select data.properties.neighborhood;
-            Console.WriteLine(String.Join(", ", filtered));
+            Console.WriteLine("This is neighborhoods with empty names filtered out.");
+            Console.WriteLine("==================================");
+            Console.WriteLine();
+            Question2(root);
+
+            // Spacing because data is large
+            Console.ReadLine();
+            Console.Clear();
 
             // Question 3 - Remove all duplicates
-            IEnumerable<string> deDuplicate =
-                from feature in root.features
-                where !feature.properties.neighborhood.Equals("")
-                select feature.properties.neighborhood;
-            Console.WriteLine(String.Join(", ", deDuplicate));
+            Console.WriteLine("This is neighborhoods with empty names and duplicates filtered out.");
+            Console.WriteLine("==================================");
+            Console.WriteLine();
+            Question3(root);
+
+            // Spacing because data is large
+            Console.ReadLine();
+            Console.Clear();
+
+            // Question 4 - Chain them all together
+            Console.WriteLine("This is everything done in one chain.");
+            Console.WriteLine("==================================");
+            Console.WriteLine();
+            Question4(root);
+
+            // Spacing because data is large
+            Console.ReadLine();
+            Console.Clear();
+
+            // Question 5 - Rewrite one of them in a different way
+            Console.WriteLine("This is removing duplicates in a different way.");
+            Console.WriteLine("==================================");
+            Console.WriteLine();
+            Question5(root);
+
+            static object Question1(RootObject root)
+            {
+                IEnumerable<string> locData = root.features
+                    .Select(data => data.properties.neighborhood);
+                Console.WriteLine(String.Join(", ", locData));
+                return locData;
+            }
+
+            static object Question2(RootObject root)
+            {
+                IEnumerable<string> filtered =
+                    from data in root.features
+                    where data.properties.neighborhood.Length > 0
+                    select data.properties.neighborhood;
+                Console.WriteLine(String.Join(", ", filtered));
+
+                return filtered;
+            }
+
+            static object Question3(RootObject root)
+            {
+                IEnumerable<string> deDuplicate =
+                    (from feature in root.features
+                     where !feature.properties.neighborhood.Equals("")
+                     select feature.properties.neighborhood).Distinct();
+                Console.WriteLine(String.Join(", ", deDuplicate));
+                return deDuplicate;
+            }
+
+            static object Question4(RootObject root)
+            {
+                IEnumerable<string> chained = root.features
+                    .Select(data => data.properties.neighborhood)
+                    .Where(neighborhood => !neighborhood.Equals(""))
+                    .Distinct();
+                Console.WriteLine(String.Join(", ", chained));
+                return chained;
+            }
+
+            static object Question5(RootObject root)
+            {
+                IEnumerable<string> deDuplicateDifferent = root.features
+                    .Select(data => data.properties.neighborhood)
+                    .Where(neighborhood => neighborhood.Length > 0);
+                Console.WriteLine(String.Join(", ", deDuplicateDifferent));
+                return deDuplicateDifferent;
+            }
         }
         public class RootObject
         {
