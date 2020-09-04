@@ -9,7 +9,7 @@ namespace LINQ
 {
     public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             // ASK KEITH WHY ON TUESDAY
             string path = "../../../data.json";
@@ -20,7 +20,7 @@ namespace LINQ
             Console.WriteLine("This is all neighborhoods printed.");
             Console.WriteLine("==================================");
             Console.WriteLine();
-            Question1(root);
+            Questions.Question1(root);
 
             // Spacing because data is large
             Console.ReadLine();
@@ -30,7 +30,7 @@ namespace LINQ
             Console.WriteLine("This is neighborhoods with empty names filtered out.");
             Console.WriteLine("==================================");
             Console.WriteLine();
-            Question2(root);
+            Questions.Question2(root);
 
             // Spacing because data is large
             Console.ReadLine();
@@ -40,7 +40,7 @@ namespace LINQ
             Console.WriteLine("This is neighborhoods with empty names and duplicates filtered out.");
             Console.WriteLine("==================================");
             Console.WriteLine();
-            Question3(root);
+            Questions.Question3(root);
 
             // Spacing because data is large
             Console.ReadLine();
@@ -50,19 +50,22 @@ namespace LINQ
             Console.WriteLine("This is everything done in one chain.");
             Console.WriteLine("==================================");
             Console.WriteLine();
-            Question4(root);
+            Questions.Question4(root);
 
             // Spacing because data is large
             Console.ReadLine();
             Console.Clear();
 
             // Question 5 - Rewrite one of them in a different way
-            Console.WriteLine("This is removing duplicates in a different way.");
+            Console.WriteLine("This is removing empties in a different way.");
             Console.WriteLine("==================================");
             Console.WriteLine();
-            Question5(root);
+            Questions.Question5(root);
+        }
 
-            static object Question1(RootObject root)
+        public class Questions
+        {
+            public static IEnumerable<string> Question1(RootObject root)
             {
                 IEnumerable<string> locData = root.features
                     .Select(data => data.properties.neighborhood);
@@ -70,7 +73,7 @@ namespace LINQ
                 return locData;
             }
 
-            static object Question2(RootObject root)
+            public static IEnumerable<string> Question2(RootObject root)
             {
                 IEnumerable<string> filtered =
                     from data in root.features
@@ -81,7 +84,7 @@ namespace LINQ
                 return filtered;
             }
 
-            static object Question3(RootObject root)
+            public static IEnumerable<string> Question3(RootObject root)
             {
                 IEnumerable<string> deDuplicate =
                     (from feature in root.features
@@ -91,7 +94,7 @@ namespace LINQ
                 return deDuplicate;
             }
 
-            static object Question4(RootObject root)
+            public static IEnumerable<string> Question4(RootObject root)
             {
                 IEnumerable<string> chained = root.features
                     .Select(data => data.properties.neighborhood)
@@ -101,15 +104,16 @@ namespace LINQ
                 return chained;
             }
 
-            static object Question5(RootObject root)
+            public static IEnumerable<string> Question5(RootObject root)
             {
-                IEnumerable<string> deDuplicateDifferent = root.features
+                IEnumerable<string> noEmpties2 = root.features
                     .Select(data => data.properties.neighborhood)
                     .Where(neighborhood => neighborhood.Length > 0);
-                Console.WriteLine(String.Join(", ", deDuplicateDifferent));
-                return deDuplicateDifferent;
+                Console.WriteLine(String.Join(", ", noEmpties2));
+                return noEmpties2;
             }
         }
+
         public class RootObject
         {
             public string type { get; set; }
